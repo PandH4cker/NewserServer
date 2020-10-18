@@ -5,7 +5,7 @@ const errorPage = (req, res, next) => {
 };
 
 const errorHandler = (err, req, res, next) => {
-    console.log(err);
+    console.dir(err);
     res.status(err.status || 500);
     if(err.status === 500) {
         console.error(err.stack);
