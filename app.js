@@ -4,7 +4,7 @@ const logger = require('morgan');
 const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
-const { isAuthenticated } = require("./middlewares/isAuthenticated");
+const { isAuthenticated } = require("./middlewares/auth");
 const { errorPage, errorHandler } = require('./middlewares/errors');
 
 const routes = require('./routes/index');
@@ -30,7 +30,7 @@ app.use(bodyParser.urlencoded({
 app.use(cookieParser());
 app.use(isAuthenticated);
 app.use('/', routes);
-//app.use('/api/', users);
+app.use('/api/', users);
 app.use(errorPage);
 app.use(errorHandler);
 
