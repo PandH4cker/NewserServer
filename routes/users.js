@@ -83,6 +83,32 @@ router.post('/users/signup', (req, res, next) => {
     });
 });
 
+router.get('/users/refresh-token', (req, res, next) => {
+    let token = req.body.token || req.query.token || req.headers['x-access-token'];
+    if(!token) 
+        return res.status(401).json({
+            error: 'Token must be passed'
+        });
+    
+    jwt.verify(token, Buffer.from(process.env.JWT_SECRET, "base64"), (err, user) => {
+        if(err) throw err;
+
+        User.findById({
+            '_id': user._id
+        }, (err, user) => {
+            if(err) throw err;
+
+            var token = utils.generateToken(user);
+            user = utils.getCleanUser(user);
+
+            res.json({
+                user: user,
+                token: token
+            });
+        });
+    });
+});
+
 router.get('/users/welcome', isLoggedIn, (req, res, next) => {
     const user = req.user;
     res.json({
