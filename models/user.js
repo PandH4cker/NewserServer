@@ -1,10 +1,12 @@
 const mongoose = require('mongoose');
+const timestamps = require('mongoose-timestamp');
 const Schema = mongoose.Schema;
+const { civilityList } = require('../constants/index');
 
 const userSchema = new Schema({
     civility: {
         type: String,
-        enum: ['M.', 'Mme.'],
+        enum: civilityList,
         required: true
     },
     firstname: {
@@ -17,6 +19,11 @@ const userSchema = new Schema({
         type: String,
         match: /^([A-Za-z])([a-zA-Z]|\s[A-Za-z])+/gm,
         lowercase: true,
+        required: true
+    },
+    username: {
+        type: String,
+        match: /^[A-Za-z0-9]+(?:[_-][A-Za-z0-9]+)*$/gm,
         required: true
     },
     phone: {
@@ -35,5 +42,7 @@ const userSchema = new Schema({
         required: true
     }
 });
+
+userSchema.plugin(timestamps);
 
 module.exports = mongoose.model('User', userSchema);
